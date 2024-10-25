@@ -112,6 +112,9 @@
 
         const inputValue = $(this).val().trim();
 
+        // clear any error msgs
+        $('span.co-feedback-span').text('')
+
         if (!inputValue || $('div.hs_phone [id^="phone-"]').attr('data-cop-phone-number') === inputValue) {
           console.log('already validated- not triggering again')
           return

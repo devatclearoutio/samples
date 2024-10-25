@@ -130,7 +130,7 @@
           url: 'https://api.clearoutphone.io/v1/phonenumber/validate',
           method: 'POST',
           headers: {
-            'Authorization': 'Bearer REPLACE_WITH_YOUR_API_TOKEN' // Replace with your actual token
+            'Authorization': 'Bearer REPLACE_WITH_YOUR_API_TOKEN' // Replace with your COP API token
           },
           data: JSON.stringify(postData),
           contentType: "application/json; charset=UTF-8",
@@ -138,15 +138,13 @@
             console.log(response);
             if (response.data.status !== 'valid') {
               _showLoader('wrong')
-              $('span.co-feedback-span').text('Please enter a valid number eg. +1 3012045575')
+              $('span.co-feedback-span').text('Please enter a valid number eg. +1 301-204-5575')
               $('form input[type=submit]').attr('disabled', true)
               $('form input[type=submit]').css({ cursor: 'not-allowed' })
             } else {
               _showLoader('correct')
               $('form input[type=submit]').attr('disabled', false)
               $('form input[type=submit]').css({ cursor: 'pointer' })
-              // replace the phone input with intl value from response
-              $('div.hs_phone [id^="phone-"]').val(response.data.international_format)
             }
             $('div.hs_phone [id^="phone-"]').attr('data-cop-phone-number', inputValue)
           },

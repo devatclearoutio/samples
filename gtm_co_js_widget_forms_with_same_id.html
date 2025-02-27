@@ -1,0 +1,43 @@
+<!-- GTM HTML Snippet for Enabling Clearout Email Validation on HubSpot forms on all pages on your website including forms with the same ID within the same page. -->
+
+<script>
+  var onReadyFn = function () {
+    var MAX_FORM_FINDING_TIMEOUT_IN_SECONDS = 10;
+    var time = 0;
+    var i = 0;
+
+    var intervalID = setInterval(function () {
+      if (time === MAX_FORM_FINDING_TIMEOUT_IN_SECONDS * 1000) {
+        clearInterval(intervalID);
+      }
+
+      jQuery('form[id*="hsForm_"]').each(function () {
+        if (!jQuery(this).attr('class').match(/\bco-form-identifier-\S*/)) {
+          var rClass = 'co-form-identifier-' + i
+          jQuery(this).addClass(rClass);
+          window.clearout.emailValidator.attachToForm({ formSelector: '#' + this.id + '.' + rClass });
+          i++
+        }
+      });
+      time += 500;
+    }, 500);
+  };
+
+  var clearout = window.clearout = window.clearout || [];
+  var opts = {
+    app_token: 'REPLACE_WITH_YOUR_CLIENT_APP_TOKEN',
+    api_url: 'https://api.clearout.io',
+    on_ready: onReadyFn,
+    auto_validation: false // Options can be added here based on the type of emails you want to accept.
+  };
+
+  clearout.push(['initialize', opts]);
+
+  (function () {
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.type = 'text/javascript';
+    g.async = true;
+    g.src = 'https://clearout.io/wp-content/co-js-widget/clearout_js_widget.js';
+    s.parentNode.insertBefore(g, s);
+  })();
+</script>

@@ -1,0 +1,30 @@
+<!-- 
+Marketo form exposes a whenReady callback as part of their SDK. 
+This allows us to hook onto the whenReady callback to load the Clearout's JS Widget 
+and pass on the form element to the widget's SDK
+
+note: This script can also be used as part of footer code on all pages. which has a marketo form in it.
+note: Replace the place holder REPLACE_WITH_YOUR_CLIENT_APP_TOKEN with a 
+    client app token generated from clearout dashboard 
+-->
+<script>
+  MktoForms2.whenReady((function (form) {
+    var clearout = window.clearout = window.clearout || [],
+      opts = {
+        "app_token": "REPLACE_WITH_YOUR_CLIENT_APP_TOKEN",
+        "api_url": "https://api.clearout.io",
+        "mode": "ajax",
+        "timeout": 10
+      };
+    clearout.push(["initialize", opts, form.getFormElem()]),
+      function () {
+        var t = document,
+          e = t.createElement("script"),
+          a = t.getElementsByTagName("script")[0];
+        e.type = "text/javascript",
+          e.async = !0,
+          e.src = "https://clearout.io/wp-content/co-js-widget/clearout_js_widget.js",
+          a.parentNode.insertBefore(e, a)
+      }();
+  }))
+</script>

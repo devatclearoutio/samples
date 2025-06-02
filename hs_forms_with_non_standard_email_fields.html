@@ -1,0 +1,46 @@
+<!-- This script is used with HubSpot forms where the email field is a custom property, not the default "Email" field.
+The `customEmailField` variable defines a pattern to identify custom email fields within the form.
+For each matching field, a unique Clearout-specific class is added.
+This custom class is then passed to the `attachToForm` method to ensure the Clearout Widget attaches correctly. -->
+
+
+<script>
+  var onReadyFn = function () {
+    // Specify the duration for which the widget should scan the page for forms.
+    var MAX_FORM_FINDING_TIMEOUT_IN_SECONDS = 10; // Time in seconds
+    var time = 0;
+    var intervalID = setInterval(function () {
+      if (time === MAX_FORM_FINDING_TIMEOUT_IN_SECONDS * 1000) {
+        clearInterval(intervalID);
+      }
+      jQuery('form[id*="hsForm_"]').each(function () {
+        // find the custom email field
+        var customEmailField = jQuery(this).find('input[id*="email_address-"]') // This can be changed to match the pattern of your email field's ID
+        var rClass = 'co-email-identifier'
+        jQuery(customEmailField).addClass(rClass);
+        window.clearout.emailValidator.attachToForm({ formSelector: '#' + this.id, selector: rClass });
+        time += 500;
+      });
+      time += 500;
+    }, 500);
+  };
+
+  var clearout = window.clearout = [];
+  var opts = {
+    app_token: 'REPLACE_WITH_YOUR_CLEAROUT_CLIENT_APP_TOKEN',
+    api_url: 'https://api.clearout.io',
+    on_ready: onReadyFn,
+    auto_validation: false,
+  };
+  clearout.push(['initialize', opts]);
+
+  (function () {
+    var d = document;
+    var g = d.createElement('script');
+    var s = d.getElementsByTagName('script')[0];
+    g.type = 'text/javascript';
+    g.async = true;
+    g.src = 'https://clearout.io/wp-content/co-js-widget/clearout_js_widget.js';
+    s.parentNode.insertBefore(g, s);
+  })();
+</script>
